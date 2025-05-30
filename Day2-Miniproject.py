@@ -59,7 +59,7 @@ while True:
     elif choose == 4:
         viewInventory()
     elif choose == 5:
-        print("-------------------")
+        print("---------Exit----------")
         break
     else:
         print("Wrong Selection! Try Again")
