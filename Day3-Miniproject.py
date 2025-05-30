@@ -1,7 +1,7 @@
 class Employee:
 
     employees = {}
-
+    departement = set()
     def __init__(self, emp_id, name, dept, phn, salary):
         self.emp_id = emp_id
         self.name = name
@@ -9,13 +9,14 @@ class Employee:
         self.phn = phn
         self.__salary = salary
 
-    def add(self):
+    def adding(self):
         Employee.employees[self.name] = {
             "emp_id": self.emp_id,
             "dept": self.dept,
             "phn": self.phn,
             "salary": self.__salary
         }
+        Employee.departement.add(self.dept)
         print(f"Employee {self.name} added successfully.")
 
     @classmethod
@@ -35,9 +36,9 @@ class Employee:
                 dept = input("Enter new department: ")
                 phn = int(input("Enter new phone number: "))
                 salary = int(input("Enter new salary: "))
-                emp_id = cls.employees[name]['emp_id']  # Keep old ID
+                emp_id = cls.employees[name]['emp_id']
+                Employee.departement.add(dept)
 
-                # Update data
                 cls.employees[name] = {
                     "emp_id": emp_id,
                     "dept": dept,
@@ -50,14 +51,29 @@ class Employee:
         else:
             print("Employee not found!")
 
-
+    @classmethod
+    def viewDepartement(cls):
+        result = []
+        print("Choose department: \n", cls.departement)
+        choice = input("Choose: ").lower().strip()
+        
+        for name, details in cls.employees.items():
+            if details["dept"].lower().strip() == choice:
+                result.append(name)
+        
+        if result:
+            print(f"Employees in '{choice}' department: {', '.join(result)}")
+        else:
+            print(f"No employees found in '{choice}' department.")
+            
 def main():
     while True:
         print("\nChoose an option:")
         print("1. Add Employee")
         print("2. View Employees")
         print("3. Update Employee")
-        print("4. Exit")
+        print("4. viewDepartement")
+        print("5. Exit")
 
         choice = input("Enter choice: ").strip()
 
@@ -69,7 +85,7 @@ def main():
                 phn = int(input("Phone Number: "))
                 salary = int(input("Salary: "))
                 emp = Employee(emp_id, name, dept, phn, salary)
-                emp.add()
+                emp.adding()
             except ValueError:
                 print("Invalid input. Please try again.")
         elif choice == "2":
@@ -77,7 +93,9 @@ def main():
         elif choice == "3":
             Employee.update()
         elif choice == "4":
-            print("Exiting program.")
+            Employee.viewDepartement()
+        elif choice == "5":
+            print("-----Exited-----")
             break
         else:
             print("Invalid choice. Try again.")
